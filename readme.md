@@ -49,7 +49,7 @@ Permissions : you need to specify at least one or you won't be able to store any
 - AllowAll : false, "store", "retrieve", true
     true allow you to store and retrieve any vehicle from the parking. "store" and "retrieve" allow you only to store or only to retrieve. false means the garage doesn't work that way, same as if you don't specify anything. 
 
-- Spawn = {
+Spawn = {
 -     Location : vector3 (REQUIRED)
         the location of the spot where you can take out vehicles. That's where the blip will be.
 -    Spawns : vector4 or array of vector4 (REQUIRED)
@@ -62,9 +62,9 @@ Permissions : you need to specify at least one or you won't be able to store any
         RGBA color value for the marker 
 -    DrawDistance : float
         Max distance to draw marker
--}
+}
 
-- Dropoff = {
+Dropoff = {
 -    Location : vector3 (REQUIRED)
         location where you can take vehicles to store them
 -    Size : float
@@ -75,9 +75,9 @@ Permissions : you need to specify at least one or you won't be able to store any
         RGBA color value (0-255) for the marker. Will use default value from config.lua if unspecified
 -    DrawDistance : float
         Max distance to draw marker. Will use default value from config.lua if unspecified
--}
+}
 
-- Blip = { -- Anything you don't specify will take the default value from config.lua
+Blip = { -- Anything you don't specify will take the default value from config.lua
 -    Location : vector3
         Location of the blip. defaults to the location of the spawn marker
 -    Category : string
@@ -94,5 +94,5 @@ Permissions : you need to specify at least one or you won't be able to store any
         3 : main map (selectable) 
         5 : minimap 
         8 : main map (not selectable) & minimap
--}
+}
 
