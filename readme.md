@@ -1,7 +1,7 @@
 
-A very customizable garage script for ESX. 
+# A very customizable garage script for ESX. 
 Rewritten from scratch with esx_garage as an inspiration
-Features :
+## Features :
  - Store your character's cars and retrieve them in garage spots
  - Job garages
  - Advanced permission system to control who can store and retrieve what and where
@@ -17,7 +17,7 @@ Features :
  Impound works differently in the databse than esx_garage to make space for more functionality. Instead of setting stored to 2, parking to nil, and pound to impound name, you set stored to 1, parking to pound name, and pound to the price you need to pay to retrieve your car. This works for paying parkings and for impounds
  It souldn't be any trouble when the two systems runs together, as a car is either in one system or another. However when transitioning from one system to the other, recretating garages into another system it could be a problem for impounded vehicles.
 
-TODO :
+## TODO :
 - Garage vehicle type limitations
 - Convert esx garage imound entries
 - Exports to create custom garages (storeveh and retrieveveh)
@@ -25,55 +25,56 @@ TODO :
 - ox_target integration
 - Job vehicle permission per model and job/Grade
 
-Garage declaration (in config.lua and when calling RegisterGarage)--
-- Name : string (MANDATORY)
+## Garage declaration (in config.lua and when calling RegisterGarage)--
+```
+Name : string (MANDATORY)
     unique garage identifier
-- Label : string
+Label : string
     Garage name for display
-- Job : table of string,number pairs
+Job : table of string,number pairs
     Jobs and minimum grade to access the garage. Example : Job = {["police"] = 0, ["ambulance"] = 2}
-- Spots : number
+Spots : number
     Number of cars that can be stored in this garage. Unspecified = unlimited
-- Fee : number TODO
+Fee : number TODO
     How much you need to  pay to store your car, as a one time payment
-- HourlyFee : number TODO
+HourlyFee : number TODO
     How much you have to may to store your car, per hour
-- SocietyFee : string
+SocietyFee : string
     Transfer the fees to this society account in addon_accounts. Requires esx_society
 
 Permissions : you need to specify at least one or you won't be able to store anything in the garage
-- AllowOwned : false, "store", "retrieve", true
+ AllowOwned : false, "store", "retrieve", true
     true allow you to store and retrieve vehicle you own from the parking. "store" and "retrieve" allow you only to store or only  to retrieve. false means the garage doesn't work that way, same as if you  don't specify anything
-- AllowJob : false, "store", "retrieve", true
+ AllowJob : false, "store", "retrieve", true
     true allow you to store and retrieve vehicle from  your job from the parking. "store" and "retrieve" allow you only to store or only to retrieve. false means the garage doesn't work that way, same as if you don't specify anything
-- AllowAll : false, "store", "retrieve", true
+ AllowAll : false, "store", "retrieve", true
     true allow you to store and retrieve any vehicle from the parking. "store" and "retrieve" allow you only to store or only to retrieve. false means the garage doesn't work that way, same as if you don't specify anything. 
 
 Spawn = {
--     Location : vector3 (REQUIRED)
+    Location : vector3 (REQUIRED)
         the location of the spot where you can take out vehicles. That's where the blip will be.
--    Spawns : vector4 or array of vector4 (REQUIRED)
+    Spawns : vector4 or array of vector4 (REQUIRED)
         a list of spawn points for vehicles. Position and heading.
--    Size : float
+    Size : float
         the size of the interactable zone. Affects interaction and marker
--    Marker : integer
+    Marker : integer
         Marker sprite https://docs.fivem.net/docs/game-references/markers/
--    Color : vector4
+    Color : vector4
         RGBA color value for the marker 
--    DrawDistance : float
+    DrawDistance : float
         Max distance to draw marker
 }
 
 Dropoff = {
--    Location : vector3 (REQUIRED)
+    Location : vector3 (REQUIRED)
         location where you can take vehicles to store them
--    Size : float
+    Size : float
         the size of the interactable zone. Affects interaction and marker. Will use default marker value from config.lua if unspecified
--    Marker : integer
+    Marker : integer
         Marker sprite https://docs.fivem.net/docs/game-references/markers/ Will use default value from config.lua if unspecified
--    Color : table
+    Color : table
         RGBA color value (0-255) for the marker. Will use default value from config.lua if unspecified
--    DrawDistance : float
+    DrawDistance : float
         Max distance to draw marker. Will use default value from config.lua if unspecified
 }
 
@@ -95,4 +96,4 @@ Blip = { -- Anything you don't specify will take the default value from config.l
         5 : minimap 
         8 : main map (not selectable) & minimap
 }
-
+```
