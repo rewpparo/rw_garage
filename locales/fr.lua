@@ -1,0 +1,17 @@
+Locales["fr"] = {
+    ['rwg_ready1'] = "Garage : Votre véhicule ",
+    ['rwg_ready2'] = " est prêt !",
+    ['rwg_stored'] = "Garage : Votre véhicule est rangé",
+    ['rwg_err_despawn'] = "Garage : Erreur au despawn du véhicule",
+    ['rwg_err_nospawn'] = "Garage : Pas de place pour le véhicule",
+    ['rwg_err_spawn'] = "Garage : Erreur au spawn du véhicule",
+    ['rwg_garagenotfound'] = "Garage : Non trouvé",
+    ['rwg_toofar'] = "Garage : Trop loin du garage",
+    ['rwg_accessdenied'] = "Garage : Tu n'as pas accès à ce garage",
+    ['rwg_carnotfound'] = "Garage : Voiture introuvable",
+    ['rwg_cardenied'] = "Garage : Tu ne peux pas prendre ce véhicule",
+    ['rwg_full'] = "Garage : Le garage est plein",
+    ['rwg_noplate'] = "Garage : Tu as les papiers du véhicule?",
+    ['rwg_duplicateplate'] =  "Garage : la plaque n'est pas unique",
+    ['rwg_storedenied']  = "Garage : Tu ne peux pas ranger ce véhicule ici",
+}
