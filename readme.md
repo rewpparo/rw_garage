@@ -19,7 +19,7 @@ Rewritten from scratch with esx_garage as an inspiration
 
 ## TODO :
 - Garage vehicle type limitations
-- Convert esx garage imound entries
+- Convert esx_garage impound entries
 - Exports to create custom garages (storeveh and retrieveveh)
 - Impound exports for cops
 - ox_target integration
@@ -35,10 +35,10 @@ Job : table of string,number pairs
     Jobs and minimum grade to access the garage. Example : Job = {["police"] = 0, ["ambulance"] = 2}
 Spots : number
     Number of cars that can be stored in this garage. Unspecified = unlimited
-Fee : number TODO
+Fee : number
     How much you need to  pay to store your car, as a one time payment
 HourlyFee : number TODO
-    How much you have to may to store your car, per hour
+    How much you have to pay to store your car, per hour
 SocietyFee : string
     Transfer the fees to this society account in addon_accounts. Requires esx_society
 
@@ -79,17 +79,17 @@ Dropoff = {
 }
 
 Blip = { -- Anything you don't specify will take the default value from config.lua
--    Location : vector3
+    Location : vector3
         Location of the blip. defaults to the location of the spawn marker
--    Category : string
+    Category : string
         The text the blip will be listed as on the main map.
--    Show : bool
--    Sprite : integer
+    Show : bool
+    Sprite : integer
         https://docs.fivem.net/docs/game-references/blips/#blips
--    Color : integer
+    Color : integer
         https://docs.fivem.net/docs/game-references/blips/#blip-colors
--    Scale : float
--    Display : integer
+    Scale : float
+    Display : integer
         0 : hidden
         2 : main map (selectable) & minimap 
         3 : main map (selectable) 
