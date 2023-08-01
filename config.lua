@@ -35,7 +35,6 @@ Config.Garages = {
         Label = "West Paleto",
         AllowOwned = true,
         Fee = 100,
-        SocietyFee = 'society_paletomairie',
         Spawn = {
             Location = vector3(-276.16, 6137.63, 31.5),
             Spawns = {
@@ -48,29 +47,27 @@ Config.Garages = {
             DrawDistance = 50,
         },
     },
-    --Garage mairie
     {
-        Name = "paletomairie",
-        Label = "Paleto Mairie",
-        Job = {["paletomairie"]=0},
-        Spots = 10,
+        Name = "Pillbox",
+        Label = "Pillbox Hill",
         AllowOwned = true,
-        AllowJob = true,
+        Fee = 100,
         Spawn = {
-            Location = vector3(-141.63, 6279.76, 31.5),
+            Location = vector3(213.5, -809.17, 31.0),
             Spawns = {
-                vector4(-138.63, 6276.3, 31.3, 226.7),
-                vector4(-141.63, 6273.64, 31.33, 226.7),
-                vector4(-136.13, 6278.83, 31.31, 226.7),
+                vector4(220.44, -806.57, 30.67, 249.45),
+                vector4(221.63, -803.95, 30.68, 249.45),
+                vector4(222.55, -801.5, 30.66, 249.45),
+                vector4(223.37, -799.05, 30.66, 249.45),
+                vector4(232.72, -808.1, 30.4, 62.4),
+                vector4(233.9, -805.7, 30.42, 62.4),
+                vector4(234.9, -803.2, 30.4, 62.4),
             },
         },
         Dropoff = {
-            Location = vector3(-133.5, 6270.2, 31.3),
+            Location = vector3(217.33, -799.45, 30.76),
             Size = 6.0,
             DrawDistance = 50,
         },
-        Blip = {
-            Show = false,
-        }
     },
 }
