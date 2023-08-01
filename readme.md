@@ -17,6 +17,7 @@ Rewritten from scratch with esx_garage as an inspiration
  It souldn't be any trouble when the two systems runs together, as a car is either in one system or another. However when transitioning from one system to the other, recretating garages into another system it could be a problem for impounded vehicles.
 
 ## TODO :
+- Storing and taking progress bar with configurable time
 - Garage vehicle type limitations
 - Convert esx_garage impound entries
 - Exports to create custom garages (storeveh and retrieveveh)

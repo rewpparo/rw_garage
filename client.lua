@@ -184,15 +184,19 @@ AddEventHandler('rw_garage:spawncar', function(spawns, props)
                 if vehicle then 
                     ESX.Game.SetVehicleProperties(vehicle, props)
                     ESX.ShowNotification(Translate('rwg_ready1')..props.plate..Translate('rwg_ready2'), "success")
-                else ESX.ShowNotification(Translate('rwg_err_spawn'), "error")
+                    return true
+                else 
+                    ESX.ShowNotification(Translate('rwg_err_spawn'), "error")
+                    return false
                 end
             end)
-            return
+            return false
         end
     end
 
     --All spawn points are full
     ESX.ShowNotification(Translate('rwg_err_nospawn'), "error")
+    return false
 end)
 
 -------------
@@ -227,7 +231,11 @@ AddEventHandler('rw_garage:despawncar', function()
     if vehicle then
         ESX.Game.DeleteVehicle(vehicle)
         ESX.ShowNotification(Translate('rwg_stored'), "success")
-    else ESX.ShowNotification(Translate('rwg_err_despawn'), "error")
+        return true
+    else 
+        ESX.ShowNotification(Translate('rwg_err_despawn'), "error")
+        return false
     end
+    return false
 end)
 
