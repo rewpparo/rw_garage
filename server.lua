@@ -333,7 +333,7 @@ AddEventHandler('rw_garage:takeVehicle', function(garage, plate)
             if fee then
                 xPlayer.removeAccountMoney('bank',fee)
                 TriggerClientEvent('esx:showNotification', source, Translate('rwg_fee')..fee, "success")
-                --Todo : add money to a society account ?
+                --add money to a society account
                 if v.SocietyFee then
                     local rows = MySQL.update.await('UPDATE addon_account_data SET money = money + ? WHERE account_name = ?', {fee, v.SocietyFee} )
                 end
