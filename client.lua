@@ -152,7 +152,12 @@ function HandleLocation(garage)
                 function(data,menu)
                     --Spawn la voituure !
                     if data.current.name~="NoVehicle" then
-                        TriggerServerEvent("rw_garage:takeVehicle", garage.Name, data.current.name)
+                        ESX.Progressbar("Taking vehicle", Config.TakeTimer,{
+                            FreezePlayer = true, 
+                            onFinish = function()
+                                TriggerServerEvent("rw_garage:takeVehicle", garage.Name, data.current.name)
+                            end
+                        })
                     end
                     menu.close()
                 end,
@@ -184,7 +189,12 @@ function HandleDropoff(garage)
     if distance < garage.Dropoff.Size/2 then 
         if IsControlJustPressed(0,51) then
             local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-            TriggerServerEvent("rw_garage:storeVehicle", garage.Name, NetworkGetNetworkIdFromEntity(vehicle))
+            ESX.Progressbar("Storing vehicle", Config.TakeTimer,{
+                FreezePlayer = true, 
+                onFinish = function()
+                    TriggerServerEvent("rw_garage:storeVehicle", garage.Name, NetworkGetNetworkIdFromEntity(vehicle))
+                end
+            })
             return
         end
     end

@@ -2,6 +2,11 @@ Config = {}
 
 Config.Locale = "en"
 
+
+--progressbar in ms
+Config.StoreTimer = 1000
+Config.TakeTimer = 1000
+
 ---------------------
 -- Default Visuals --
 ---------------------
@@ -23,7 +28,7 @@ Config.DefaultMarker = {
     Color = {64,64,255,128},
     DrawDistance = 25,
 }
- 
+
 ------------------------
 -- Garage definitions --
 ------------------------
