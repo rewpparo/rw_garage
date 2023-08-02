@@ -95,7 +95,7 @@ end)
 -- ACCESS CHECK --
 ------------------
 
---When you change this change the client equivalent too
+--When you change this change the server equivalent too
 function CanPlayerOpenGarage(garage)
     if garage.Job then
         for k,v in pairs(garage.Job)  do
@@ -169,36 +169,6 @@ function HandleLocation(garage)
     end
 end
 
--- Called by the server to request spawning of a car
-RegisterNetEvent('rw_garage:spawncar') 
-AddEventHandler('rw_garage:spawncar', function(spawns, props)
-    --Check spawn point
-    local location = nil
-    local heading = nil
-    for i, v in pairs(spawns) do
-        location = vec3(v.x, v.y, v.z)
-        heading = v.w
-        if ESX.Game.IsSpawnPointClear(location, 2.5) then
-            ---Perform the spawning
-            ESX.Game.SpawnVehicle(props.model, location, heading, function(vehicle)
-                if vehicle then 
-                    ESX.Game.SetVehicleProperties(vehicle, props)
-                    ESX.ShowNotification(Translate('rwg_ready1')..props.plate..Translate('rwg_ready2'), "success")
-                    return true
-                else 
-                    ESX.ShowNotification(Translate('rwg_err_spawn'), "error")
-                    return false
-                end
-            end)
-            return false
-        end
-    end
-
-    --All spawn points are full
-    ESX.ShowNotification(Translate('rwg_err_nospawn'), "error")
-    return false
-end)
-
 -------------
 -- DROPOFF --
 -------------
@@ -214,28 +184,8 @@ function HandleDropoff(garage)
     if distance < garage.Dropoff.Size/2 then 
         if IsControlJustPressed(0,51) then
             local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-            props = ESX.Game.GetVehicleProperties(vehicle)
-            TriggerServerEvent("rw_garage:storeVehicle", garage.Name, props.plate)
+            TriggerServerEvent("rw_garage:storeVehicle", garage.Name, NetworkGetNetworkIdFromEntity(vehicle))
             return
         end
     end
 end
-
---Called by the server to despawn a car
-RegisterNetEvent('rw_garage:despawncar') 
-AddEventHandler('rw_garage:despawncar', function()
-    local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-    if not vehicle then --As a fallback if the player left the vehicle during processing
-        vehicle = GetVehiclePedIsIn(PlayerPedId(), true)
-    end
-    if vehicle then
-        ESX.Game.DeleteVehicle(vehicle)
-        ESX.ShowNotification(Translate('rwg_stored'), "success")
-        return true
-    else 
-        ESX.ShowNotification(Translate('rwg_err_despawn'), "error")
-        return false
-    end
-    return false
-end)
-

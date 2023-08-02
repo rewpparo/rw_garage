@@ -3,6 +3,7 @@
 Rewritten from scratch with esx_garage as an inspiration
 ## Features :
  - Store your character's cars and retrieve them in garage spots
+ - Uses esx onesync for persistant server side vehicles
  - Job garages
  - Advanced permission system to control who can store and retrieve what and where
  - Cutomizable blips and markers
@@ -14,7 +15,7 @@ Rewritten from scratch with esx_garage as an inspiration
  Required database fields in owned_vehicles : owner, plate, vehicle, job, stored, parking, pound  
  Optional : name  
  Impound works differently in the databse than esx_garage to make space for more functionality. Instead of setting stored to 2, parking to nil, and pound to impound name, you set stored to 1, parking to pound name, and pound to the price you need to pay to retrieve your car. This works for paying parkings and for impounds  
- It souldn't be any trouble when the two systems runs together, as a car is either in one system or another. However when transitioning from one system to the other, recretating garages into another system it could be a problem for impounded vehicles.
+ It souldn't be any trouble when the two systems run side by side, as a car is either in one system or another. However when transitioning from one system to the other, recretating garages into another system it could be a problem for impounded vehicles.
 
 ## TODO :
 - Storing and taking progress bar with configurable time

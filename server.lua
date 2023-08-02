@@ -1,6 +1,25 @@
 
 Garages = {}
 
+-------------
+-- HELPERS --
+-------------
+function isAreaClearOfVechicles(center, radius)
+    local vehicles = GetAllVehicles()
+    for i,v in pairs(vehicles) do
+        if #(GetEntityCoords(v) - center) < radius then return false end
+    end
+    return true
+end
+
+function isAreaClearOfPeds(center, radius)
+    local peds = GetAllPeds()
+    for i,v in pairs(peds) do
+        if #(GetEntityCoords(v) - center) < radius then return false end
+    end
+    return true
+end
+
 -----------------------------------
 -- REGISTER / UNREGISTER GARAGES --
 --       Those are exports       --
@@ -295,10 +314,12 @@ ESX.RegisterServerCallback('rw_garage:listVehicles', function(source, cb, garage
     cb(r, count)
 end)
 
--- sortir vehicules
+-- take vehicules
 RegisterServerEvent('rw_garage:takeVehicle')
 AddEventHandler('rw_garage:takeVehicle', function(garage, plate)
     local source = source
+    if not source or source=="" then return end
+
     for i, v in pairs(Garages) do
         if v.Name == garage then
             --Got the right garage
@@ -338,13 +359,37 @@ AddEventHandler('rw_garage:takeVehicle', function(garage, plate)
                     local rows = MySQL.update.await('UPDATE addon_account_data SET money = money + ? WHERE account_name = ?', {fee, v.SocietyFee} )
                 end
             end
- 
+  
             --All good, take it out !
             local props = json.decode(result[1].vehicle)
-            TriggerClientEvent('rw_garage:spawncar', source, v.Spawn.Spawns, props)
-            --Update db
-            MySQL.update('UPDATE owned_vehicles SET stored = 0, pound = NULL WHERE plate = ?', { plate }, function(affectedRows) end)
-            --All done !
+            for i, s in pairs(v.Spawn.Spawns) do
+                --Is spawn point clear ?
+                local center = vector3(s.x, s.y, s.z)
+                if isAreaClearOfVechicles(center, 2.5) and isAreaClearOfPeds(center, 2.5) then
+                    --Update db
+                    MySQL.update('UPDATE owned_vehicles SET stored = 0, pound = NULL WHERE plate = ?', { plate }, function(affectedRows) 
+                        if affectedRows==1 then
+                            --Do the spawning
+                            ESX.OneSync.SpawnVehicle(props.model, vector3(s.x, s.y, s.z), s.w, props, function(NetId) 
+                                if DoesEntityExist(NetworkGetEntityFromNetworkId(NetId)) then 
+                                    TriggerClientEvent('esx:showNotification', source, Translate('rwg_ready1')..props.plate..Translate('rwg_ready2'), "success")
+                                    return
+                                else
+                                    --Error spawning the vehicle, revert database
+                                    MySQL.update('UPDATE owned_vehicles SET stored = 1 WHERE plate = ?', { plate })
+                                    TriggerClientEvent('esx:showNotification', source, Translate('rwg_err_spawn'), "error")
+                                end
+                            end)
+                        else
+                            --Plate not found/database error
+                            TriggerClientEvent('esx:showNotification', source, Translate('rwg_carnotfound'), "error")
+                        end
+                    end)
+                    return
+                end
+            end
+            --No spawn point available
+            TriggerClientEvent('esx:showNotification', source, Translate('rwg_err_nospawn'), "error")
             return
         end
     end
@@ -356,9 +401,18 @@ end)
 
 -- Rentrer vehicule
 RegisterServerEvent('rw_garage:storeVehicle')
-AddEventHandler('rw_garage:storeVehicle', function(garage, plate)
+AddEventHandler('rw_garage:storeVehicle', function(garage, vehicle)
     local source = source
+    if not source or source=="" then return end
     local xPlayer = ESX.GetPlayerFromId(source)
+    
+    --Check vehicle
+    vehicle = NetworkGetEntityFromNetworkId(vehicle)
+    if not DoesEntityExist(vehicle) then 
+        Citizen.Trace("Non existent vehicle passed")
+        return
+    end
+    local plate =  GetVehicleNumberPlateText(vehicle)
 
     --check we're at garage dropoff
     local garageobj = nil
@@ -410,7 +464,8 @@ AddEventHandler('rw_garage:storeVehicle', function(garage, plate)
             TriggerClientEvent('esx:showNotification', source, Translate('rwg_storedenied'), "error")
             return 
         end
-        --Calculate the fee
+
+        --handle fee
         local fee = 0
         if tonumber(result[1].pound) then fee +=tonumber(result[1].pound) end --Keep existing fee
         if garageobj.Fee then fee+=garageobj.Fee end --Add flat fee
@@ -420,7 +475,19 @@ AddEventHandler('rw_garage:storeVehicle', function(garage, plate)
 
         --All good !
         local rows = MySQL.update.await('UPDATE owned_vehicles SET stored = 1, parking = ?, pound = ? WHERE plate = ?', {garage, fee, plate} )
-        if rows==1 then TriggerClientEvent('rw_garage:despawncar', source)
+        if rows==1 then
+            --TriggerClientEvent('rw_garage:despawncar', source) --The old ways
+            DeleteEntity(vehicle)
+            Wait(50)
+            if DoesEntityExist(vehicle) then
+                --Vehicle was not despawned, reverting database
+                MySQL.update('UPDATE owned_vehicles SET stored = 0 WHERE plate = ?', {plate} )
+                TriggerClientEvent('esx:showNotification', source, Translate('rwg_err_despawn'), "error")
+            else
+                --all good !
+                TriggerClientEvent('esx:showNotification', source, Translate('rwg_stored'), "success")
+                return
+            end
         else TriggerClientEvent('esx:showNotification', source, Translate('rwg_carnotfound'), "error") end
     end)
 end)
