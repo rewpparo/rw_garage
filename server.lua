@@ -311,7 +311,7 @@ ESX.RegisterServerCallback('rw_garage:listVehicles', function(source, cb, garage
             end
         end
     end
-    cb(r, count)
+    cb(r, Garageobj.Label, count, Garageobj.Spots)
 end)
 
 -- take vehicules

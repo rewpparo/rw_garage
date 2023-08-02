@@ -22,6 +22,13 @@ server_scripts {
     'server.lua',
 }
 
+exports {
+	'OpenGarageMenu',
+	'IsGarageMenuOpen',
+	'CloseGarageMenu',
+	'StoreVehicle'
+}
+
 server_exports {
 	'RegisterGarage',
 	'UnregisterGarage',

@@ -109,9 +109,73 @@ end
 -- TAKE OUT--
 -------------
 
+function OpenGarageMenu(garagename)
+    if IsGarageMenuOpen() then return end
+
+    ESX.TriggerServerCallback('rw_garage:listVehicles', function(vehicles, label, count, spots)
+        --make menu elements
+        local Elements = {}
+        for i,v in pairs(vehicles) do 
+            Citizen.Trace("Vehicle "..v.Plate.."\n")
+            local l = v.Name
+            if not l or l=="" then 
+                l = v.Plate.." - "..GetDisplayNameFromVehicleModel(v.Model) 
+            end
+            if v.Fee and v.Fee~="" then 
+                l = l.." - $"..vehicles[i].Fee.." fee" 
+            end
+            table.insert(Elements, {label = l, name = v.Plate})
+        end
+
+        --Add placeholder if no other items
+        if #Elements<1 then
+            table.insert(Elements, {label = "Pas de vehicle", name = "NoVehicle"})
+        end
+
+        --menu's ready, let's start it
+        local l =label
+        if spots then l = l.." "..count.."/"..spots end
+        Citizen.Trace("Opening garage menu "..l.."\n")
+        ESX.UI.Menu.Open("default", GetCurrentResourceName(), garagename, 
+            {
+                title = l,
+                align = 'top-right',
+                elements = Elements
+            }, 
+
+            --Element selected
+            function(data,menu)
+                --Spawn la voituure !
+                if data.current.name~="NoVehicle" then
+                    ESX.Progressbar("Taking vehicle", Config.TakeTimer,{
+                        FreezePlayer = true, 
+                        onFinish = function()
+                            TriggerServerEvent("rw_garage:takeVehicle", garagename, data.current.name)
+                        end
+                    })
+                end
+                menu.close()
+            end,
+
+            --Menu canceled
+            function(data, menu)
+                menu.close()
+            end
+        )
+    end, garagename)
+end
+
+function CloseGarageMenu(garagename)
+    return ESX.UI.Menu.Close("default", GetCurrentResourceName(), garagename)
+end
+
+function IsGarageMenuOpen(garagename)
+    return ESX.UI.Menu.IsOpen("default", GetCurrentResourceName(), garagename)
+end
+
 --Handling of the spawn spot, where you take out your car
 function HandleLocation(garage)
-
+    if garage.Spawn.Marker==-1 then return end
     local playerCoords = GetEntityCoords(PlayerPedId())
     local distance = #(playerCoords - garage.Spawn.Location)
 
@@ -119,60 +183,12 @@ function HandleLocation(garage)
 
     --Handle Menu
     if distance < garage.Spawn.Size/2 then 
-        if IsControlJustPressed(0,51) and not ESX.UI.Menu.IsOpen("default", GetCurrentResourceName(), garage.Name) then
-            ESX.TriggerServerCallback('rw_garage:listVehicles', function(vehicles, count)
-
-            --make menu elements
-            local Elements = {}
-            for i=1,#vehicles,1 do 
-                --Default label if no name is set
-                local l=""
-                if vehicles[i].Name then l = vehicles[i].Name
-                else l = vehicles[i].Plate.." - "..GetDisplayNameFromVehicleModel(vehicles[i].Model) end
-                if vehicles[i].Fee then l = l.." - $"..vehicles[i].Fee.." fee" end
-                table.insert(Elements, {label = l, name = vehicles[i].Plate})
-            end
-
-            --Add placeholder if no other items
-            if #Elements<1 then
-                table.insert(Elements, {label = "Pas de vehicle", name = "NoVehicle"})
-            end
-
-            --menu's ready, let's start it
-            local l =""
-            if garage.Spots then l = garage.Label.." "..count.."/"..garage.Spots
-            else l = garage.Label end
-            ESX.UI.Menu.Open("default", GetCurrentResourceName(), garage.Name, 
-                {
-                    title = l,
-                    align = 'top-right',
-                    elements = Elements
-                }, 
-
-                --Element selected
-                function(data,menu)
-                    --Spawn la voituure !
-                    if data.current.name~="NoVehicle" then
-                        ESX.Progressbar("Taking vehicle", Config.TakeTimer,{
-                            FreezePlayer = true, 
-                            onFinish = function()
-                                TriggerServerEvent("rw_garage:takeVehicle", garage.Name, data.current.name)
-                            end
-                        })
-                    end
-                    menu.close()
-                end,
-
-                --Menu canceled
-                function(data, menu)
-                    menu.close()
-                end)
-
-            end, garage.Name)
+        if IsControlJustPressed(0,51) and not IsGarageMenuOpen() then
+            OpenGarageMenu(garage.Name)
         end
     else
-        if ESX.UI.Menu.IsOpen("default", GetCurrentResourceName(), garage.Name) and distance>garage.Spawn.Size*2 or distance > 20 then
-            ESX.UI.Menu.Close("default", GetCurrentResourceName(), garage.Name) 
+        if IsGarageMenuOpen(garage.Name) and (distance>garage.Spawn.Size*2 or distance > 20) then
+            CloseGarageMenu(garage.Name)
         end
     end
 end
@@ -181,8 +197,18 @@ end
 -- DROPOFF --
 -------------
 
+function StoreVehicle(vehicle, garagename)
+    ESX.Progressbar("Storing vehicle", Config.TakeTimer,{
+        FreezePlayer = true, 
+        onFinish = function()
+            TriggerServerEvent("rw_garage:storeVehicle", garagename, NetworkGetNetworkIdFromEntity(vehicle))
+        end
+    })
+end
+
 --Handling of the Dropoff spot, to store cars
 function HandleDropoff(garage)
+    if garage.Dropoff.Marker==-1 then return end
 
     local playerCoords = GetEntityCoords(PlayerPedId())
     local distance = #(playerCoords - garage.Dropoff.Location)
@@ -192,12 +218,7 @@ function HandleDropoff(garage)
     if distance < garage.Dropoff.Size/2 then 
         if IsControlJustPressed(0,51) then
             local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
-            ESX.Progressbar("Storing vehicle", Config.TakeTimer,{
-                FreezePlayer = true, 
-                onFinish = function()
-                    TriggerServerEvent("rw_garage:storeVehicle", garage.Name, NetworkGetNetworkIdFromEntity(vehicle))
-                end
-            })
+            StoreVehicle(vehicle, garage.Name)
             return
         end
     end

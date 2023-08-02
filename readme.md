@@ -6,25 +6,27 @@ Rewritten from scratch with esx_garage as an inspiration
  - Uses esx onesync for persistant server side vehicles
  - Job garages
  - Advanced permission system to control who can store and retrieve what and where
+ - Configurable time to store and take
  - Cutomizable blips and markers
  - Garage capacity
  - Pay to take vehicle out
  - Impoud system integrated with garage system
- 
- Aims to keep the database a basic esx_vehicleshop, and may support extra features  
- Required database fields in owned_vehicles : owner, plate, vehicle, job, stored, parking, pound  
- Optional : name  
- Impound works differently in the databse than esx_garage to make space for more functionality. Instead of setting stored to 2, parking to nil, and pound to impound name, you set stored to 1, parking to pound name, and pound to the price you need to pay to retrieve your car. This works for paying parkings and for impounds  
- It souldn't be any trouble when the two systems run side by side, as a car is either in one system or another. However when transitioning from one system to the other, recretating garages into another system it could be a problem for impounded vehicles.
+
+Aims to keep the database a basic esx_vehicleshop, and may support extra features  
+Required database fields in owned_vehicles : owner, plate, vehicle, job, stored, parking, pound  
+Optional : name (will show in garage menu)
+
+Impound works differently in the databse than esx_garage to make space for more functionality. Instead of setting stored to 2, parking to nil, and pound to impound name, you set stored to 1, parking to pound name, and pound to the price you need to pay to retrieve your car. This works for paying parkings and for impounds. It souldn't be any trouble when the two systems run side by side, as a car is either in one system or another. However when transitioning from one system to the other, recretating garages into another system it could be a problem for impounded vehicles.
+
+ox_target and qtarget integration should be easy. Just register a garage with spawn and/or dropoff Marker set to -1 to prevent marker from drawing and being interacted with, then implement the targeting as you like to call the client exports to open and close the garage menu or store the vehicle. Location and permissions are still checked server side. 
 
 ## TODO :
-- Storing and taking progress bar with configurable time
-- Garage vehicle type limitations
-- Convert esx_garage impound entries
-- Exports to create custom garages (storeveh and retrieveveh)
-- Impound exports for cops
-- ox_target integration
-- Job vehicle permission per model and job/Grade
+ - Hourly fees for garages
+ - Garage vehicle type limitations (plane, car...)
+ - Polish cop access to impound, put fee, etc...
+ - Job vehicle permission per model and job/Grade ?
+ - Script to convert esx_garage impound entries
+ - Look into simplifying custom garages by exposing functionality
 
 ## Garage declaration (in config.lua and when calling RegisterGarage)--
 ```
