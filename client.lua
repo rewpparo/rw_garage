@@ -122,27 +122,28 @@ function HandleLocation(garage)
         if IsControlJustPressed(0,51) and not ESX.UI.Menu.IsOpen("default", GetCurrentResourceName(), garage.Name) then
             ESX.TriggerServerCallback('rw_garage:listVehicles', function(vehicles, count)
 
-                --make menu elements
-                local Elements = {}
-                for i=1,#vehicles,1 do 
-                    --Default label if no name is set
-                    local l=""
-                    if vehicles[i].Name then l = vehicles[i].Name
-                    else l = vehicles[i].Plate.." - "..GetDisplayNameFromVehicleModel(vehicles[i].Model) end
-                    if vehicles[i].Fee then l = l.." - $"..vehicles[i].Fee.." fee" end
-                    table.insert(Elements, {label = l, name = vehicles[i].Plate})
-                end
-                --Add placeholder if no other items
-                if #Elements<1 then
-                    table.insert(Elements, {label = "Pas de vehicle", name = "NoVehicle"})
-                end
+            --make menu elements
+            local Elements = {}
+            for i=1,#vehicles,1 do 
+                --Default label if no name is set
+                local l=""
+                if vehicles[i].Name then l = vehicles[i].Name
+                else l = vehicles[i].Plate.." - "..GetDisplayNameFromVehicleModel(vehicles[i].Model) end
+                if vehicles[i].Fee then l = l.." - $"..vehicles[i].Fee.." fee" end
+                table.insert(Elements, {label = l, name = vehicles[i].Plate})
+            end
 
-                --menu's ready, let's start it
-                local l =""
-                if garage.Spots then l = garage.Label.." "..count.."/"..garage.Spots
-                else l = garage.Label
-                end
-                ESX.UI.Menu.Open("default", GetCurrentResourceName(), garage.Name, {
+            --Add placeholder if no other items
+            if #Elements<1 then
+                table.insert(Elements, {label = "Pas de vehicle", name = "NoVehicle"})
+            end
+
+            --menu's ready, let's start it
+            local l =""
+            if garage.Spots then l = garage.Label.." "..count.."/"..garage.Spots
+            else l = garage.Label end
+            ESX.UI.Menu.Open("default", GetCurrentResourceName(), garage.Name, 
+                {
                     title = l,
                     align = 'top-right',
                     elements = Elements
@@ -161,15 +162,17 @@ function HandleLocation(garage)
                     end
                     menu.close()
                 end,
+
                 --Menu canceled
                 function(data, menu)
                     menu.close()
                 end)
+
             end, garage.Name)
-        else 
-            if distance>garage.Spawn.Size*10 or distance > 100 then 
-                ESX.UI.Menu.Close("default", GetCurrentResourceName(), garage.Name) 
-            end 
+        end
+    else
+        if ESX.UI.Menu.IsOpen("default", GetCurrentResourceName(), garage.Name) and distance>garage.Spawn.Size*2 or distance > 20 then
+            ESX.UI.Menu.Close("default", GetCurrentResourceName(), garage.Name) 
         end
     end
 end
