@@ -1,6 +1,7 @@
 
 # A very customizable garage script for ESX. 
-Rewritten from scratch with esx_garage as an inspiration
+Rewritten from scratch by Rewpparo with esx_garage as an inspiration.
+
 ## Features :
  - Store your character's cars and retrieve them in garage spots
  - Uses esx onesync for persistant server side vehicles
@@ -12,14 +13,6 @@ Rewritten from scratch with esx_garage as an inspiration
  - Pay to take vehicle out
  - Impoud system integrated with garage system
 
-Aims to keep the database a basic esx_vehicleshop, and may support extra features  
-Required database fields in owned_vehicles : owner, plate, vehicle, job, stored, parking, pound  
-Optional : name (will show in garage menu)
-
-Impound works differently in the databse than esx_garage to make space for more functionality. Instead of setting stored to 2, parking to nil, and pound to impound name, you set stored to 1, parking to pound name, and pound to the price you need to pay to retrieve your car. This works for paying parkings and for impounds. It souldn't be any trouble when the two systems run side by side, as a car is either in one system or another. However when transitioning from one system to the other, recretating garages into another system it could be a problem for impounded vehicles.
-
-ox_target and qtarget integration should be easy. Just register a garage with spawn and/or dropoff Marker set to -1 to prevent marker from drawing and being interacted with, then implement the targeting as you like to call the client exports to open and close the garage menu or store the vehicle. Location and permissions are still checked server side. 
-
 ## TODO :
  - Hourly fees for garages
  - Garage vehicle type limitations (plane, car...)
@@ -27,6 +20,38 @@ ox_target and qtarget integration should be easy. Just register a garage with sp
  - Job vehicle permission per model and job/Grade ?
  - Script to convert esx_garage impound entries
  - Look into simplifying custom garages by exposing functionality
+
+## Zlib licence
+```
+Copyright (c) 2023 Rewpparo
+
+This software is provided 'as-is', without any express or implied
+warranty. In no event will the authors be held liable for any damages
+arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
+
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would be
+   appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
+```
+
+## database
+Aims to keep the database a basic esx_vehicleshop, and may support extra features  
+Required database fields in owned_vehicles : owner, plate, vehicle, job, stored, parking, pound  
+Optional : name (will show in garage menu)
+
+## Impounds
+Impound works differently in the databse than esx_garage to make space for more functionality. Instead of setting stored to 2, parking to nil, and pound to impound name, you set stored to 1, parking to pound name, and pound to the price you need to pay to retrieve your car. This works for paying parkings and for impounds. It shouldn't be any trouble when the two systems run side by side, as a car is either in one system or another. However when transitioning from one system to the other, recretating garages into another system it could be a problem for impounded vehicles.
+
+## custom interactions
+ox_target and qtarget integration should be easy. Just register a garage with spawn and/or dropoff Marker set to -1 to prevent marker from drawing and being interacted with, then implement the targeting as you like to call the client exports to open and close the garage menu or store the vehicle. Location and permissions are still checked server side. 
 
 ## Garage declaration (in config.lua and when calling RegisterGarage)--
 ```
