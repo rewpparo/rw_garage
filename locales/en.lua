@@ -14,5 +14,6 @@ Locales["en"] = {
     ['rwg_noplate'] = "Garage : Vehicle is unregistered.. or stolen?",
     ['rwg_duplicateplate'] =  "Garage : Plate is not unique",
     ['rwg_storedenied']  = "Garage : you can't store that vehicle here",
-    ['rwg_fee'] = "Garage : you paid a fee of $"
+    ['rwg_fee'] = "Garage : you paid a fee of $",
+    ['rwg_type'] = "Garage : wrong vehicle type",
 }

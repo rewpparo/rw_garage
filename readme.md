@@ -7,19 +7,19 @@ Rewritten from scratch by Rewpparo with esx_garage as an inspiration.
  - Uses esx onesync for persistant server side vehicles
  - Job garages
  - Advanced permission system to control who can store and retrieve what and where
- - Configurable time to store and take
- - Cutomizable blips and markers
  - Garage capacity
+ - Cutomizable blips and markers
+ - Configurable time to store and take
  - Pay to take vehicle out
  - Impoud system integrated with garage system
-
+ - Compatible with ox_target / qtarget (make your own targets)
+ 
 ## TODO :
  - Hourly fees for garages
- - Garage vehicle type limitations (plane, car...)
  - Polish cop access to impound, put fee, etc...
  - Job vehicle permission per model and job/Grade ?
  - Script to convert esx_garage impound entries
- - Look into simplifying custom garages by exposing functionality
+ - Look into allowing different levels of custom garages by exposing functionality
 
 ## Zlib licence
 ```
@@ -65,10 +65,12 @@ Spots : number
     Number of cars that can be stored in this garage. Unspecified = unlimited
 Fee : number
     How much you need to  pay to store your car, as a one time payment
-HourlyFee : number TODO
+HourlyFee : number (TODO)
     How much you have to pay to store your car, per hour
 SocietyFee : string
     Transfer the fees to this society account in addon_accounts. Requires esx_society
+Type : string, table of strings
+    The types of vehicle allowed. Can be automobile, bike, boat, heli, plane, submarine, trailer, train. Default : Automobile, bike
 
 Permissions : you need to specify at least one or you won't be able to store anything in the garage
  AllowOwned : false, "store", "retrieve", true

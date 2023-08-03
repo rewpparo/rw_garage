@@ -14,4 +14,6 @@ Locales["fr"] = {
     ['rwg_noplate'] = "Garage : Tu as les papiers du véhicule?",
     ['rwg_duplicateplate'] =  "Garage : la plaque n'est pas unique",
     ['rwg_storedenied']  = "Garage : Tu ne peux pas ranger ce véhicule ici",
+    ['rwg_fee'] = "Garage : payé les frais de $",
+    ['rwg_type'] = "Garage : mauvais type de véhicule",
 }

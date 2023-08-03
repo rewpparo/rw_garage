@@ -108,6 +108,10 @@ function _RegisterGarage(garage)
     end
 
     --Fill default values
+    if not garage.Type or garage.Type =="" then garage.Type = {'automobile', 'bike'} end
+    if type(garage.Type)=='string' then garage.Type =  {garage.Type} end
+    if type(garage.Type)~='table' then garage.Type = {'automobile', 'bike'} end
+
     if type(garage.Spawn.Size) ~= 'number' then
         garage.Spawn.Size = Config.DefaultMarker.Size
     end
@@ -270,7 +274,7 @@ end
 -----------------------
 -- TAKE OUT VEHICLES --
 -----------------------
- 
+
 -- List vehicles
 ESX.RegisterServerCallback('rw_garage:listVehicles', function(source, cb, garage)
 	local xPlayer = ESX.GetPlayerFromId(source)
@@ -427,6 +431,17 @@ AddEventHandler('rw_garage:storeVehicle', function(garage, vehicle)
     end
     if not garageobj then
         TriggerClientEvent('esx:showNotification', source, Translate('rwg_toofar'), "error")
+        return
+    end
+
+    --Check vehicle type
+    local type = GetVehicleType(vehicle)
+    local found = false
+    for i,v in pairs(garageobj.Type) do
+        if type == v then found=true end
+    end
+    if not found then 
+        TriggerClientEvent('esx:showNotification', source, Translate('rwg_type'), "error")
         return
     end
 
