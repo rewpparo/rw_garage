@@ -110,13 +110,13 @@ end
 -------------
 
 function OpenGarageMenu(garagename)
-    if IsGarageMenuOpen() then return end
+    if IsGarageMenuOpen(garagename) then return end
 
     ESX.TriggerServerCallback('rw_garage:listVehicles', function(vehicles, label, count, spots)
-        --make menu elements
+        --make menu elements TODO : make two columns job vehicles on one side on job garages
         local Elements = {}
+
         for i,v in pairs(vehicles) do 
-            Citizen.Trace("Vehicle "..v.Plate.."\n")
             local l = v.Name
             if not l or l=="" then 
                 l = v.Plate.." - "..GetDisplayNameFromVehicleModel(v.Model) 
@@ -124,37 +124,36 @@ function OpenGarageMenu(garagename)
             if v.Fee and v.Fee~="" then 
                 l = l.." - $"..vehicles[i].Fee.." fee" 
             end
-            table.insert(Elements, {label = l, name = v.Plate})
+            table.insert(Elements, {data = garagename, cols = {l,'{{Take|'..v.Plate..'}}'}})
         end
 
         --Add placeholder if no other items
         if #Elements<1 then
-            table.insert(Elements, {label = "Pas de vehicle", name = "NoVehicle"})
+            table.insert(Elements, {data = garagename, cols = {"Pas de vehicle",''}})
         end
 
         --menu's ready, let's start it
         local l =label
         if spots then l = l.." "..count.."/"..spots end
-        Citizen.Trace("Opening garage menu "..l.."\n")
-        ESX.UI.Menu.Open("default", GetCurrentResourceName(), garagename, 
+        ESX.UI.Menu.Open("list", GetCurrentResourceName(), garagename, 
             {
-                title = l,
-                align = 'top-right',
-                elements = Elements
+                head = {l, 'Actions'},
+                rows = Elements
             }, 
 
             --Element selected
             function(data,menu)
                 --Spawn la voituure !
-                if data.current.name~="NoVehicle" then
+                Citizen.Trace(data.value..'\n')
+                if data.value ~="NoVehicle" then
+                    menu.close()
                     ESX.Progressbar("Taking vehicle", Config.TakeTimer,{
                         FreezePlayer = true, 
                         onFinish = function()
-                            TriggerServerEvent("rw_garage:takeVehicle", garagename, data.current.name)
+                            TriggerServerEvent("rw_garage:takeVehicle", garagename, data.value )
                         end
                     })
                 end
-                menu.close()
             end,
 
             --Menu canceled
