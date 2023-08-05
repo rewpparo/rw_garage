@@ -405,7 +405,7 @@ end)
 
 -- Rentrer vehicule
 RegisterServerEvent('rw_garage:storeVehicle')
-AddEventHandler('rw_garage:storeVehicle', function(garage, vehicle)
+AddEventHandler('rw_garage:storeVehicle', function(garage, vehicle, props)
     local source = source
     if not source or source=="" then return end
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -489,7 +489,7 @@ AddEventHandler('rw_garage:storeVehicle', function(garage, vehicle)
         else fee = nil end
 
         --All good !
-        local rows = MySQL.update.await('UPDATE owned_vehicles SET stored = 1, parking = ?, pound = ? WHERE plate = ?', {garage, fee, plate} )
+        local rows = MySQL.update.await('UPDATE owned_vehicles SET vehicle = ?, stored = 1, parking = ?, pound = ? WHERE plate = ?', {json.encode(props), garage, fee, plate} )
         if rows==1 then
             --TriggerClientEvent('rw_garage:despawncar', source) --The old ways
             DeleteEntity(vehicle)

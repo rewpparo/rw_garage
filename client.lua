@@ -200,7 +200,7 @@ function StoreVehicle(vehicle, garagename)
     ESX.Progressbar("Storing vehicle", Config.TakeTimer,{
         FreezePlayer = true, 
         onFinish = function()
-            TriggerServerEvent("rw_garage:storeVehicle", garagename, NetworkGetNetworkIdFromEntity(vehicle))
+            TriggerServerEvent("rw_garage:storeVehicle", garagename, NetworkGetNetworkIdFromEntity(vehicle), ESX.Game.GetVehicleProperties(vehicle))
         end
     })
 end
